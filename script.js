@@ -86,29 +86,28 @@ $(document).ready(function() {
         }
     }
 
-function initializeParameters() {
-    const order = parseInt($("#order").val());
-    const parameterGroup = $("#parameter-group");
-    parameterGroup.empty();
+    function initializeParameters() {
+        const order = parseInt($("#order").val());
+        const parameterGroup = $("#parameter-group");
+        parameterGroup.empty();
 
-    for (let i = 0; i <= MAX_ORDER; i++) {
-        const letter = String.fromCharCode(97 + i);
-        const step = calculateStep(0.00001);
-        parameterGroup.append(`
-            <div class="input-group" style="${i <= order ? '' : 'display:none;'}">
-                <label for="${letter}">${letter.toUpperCase()}:</label>
-                <input type="number" id="${letter}" value="0" step="${step}">
-                <div id="slider-${letter}" class="slider"></div>
-            </div>
-        `);
+        for (let i = 0; i <= MAX_ORDER; i++) {
+            const letter = String.fromCharCode(97 + i);
+            const step = calculateStep(0.00001);
+            parameterGroup.append(`
+                <div class="input-group" style="${i <= order ? '' : 'display:none;'}">
+                    <label for="${letter}">${letter.toUpperCase()}:</label>
+                    <input type="number" id="${letter}" value="0" step="${step}">
+                    <div id="slider-${letter}" class="slider"></div>
+                </div>
+            `);
+        }
+
+        loadParametersFromURL();
+        initializeSliders();
+        updatePlot();
+        Plotly.Plots.resize(document.getElementById('plot'));
     }
-
-    loadParametersFromURL();
-    initializeSliders();
-    updatePlot();
-    Plotly.Plots.resize(document.getElementById('plot'));
-}
-
 
     function getParameters() {
         const params = [];
@@ -151,42 +150,42 @@ function initializeParameters() {
         saveParametersToURL();
     }
 
-function saveParametersToURL() {
-    const params = new URLSearchParams();
-    const order = parseInt($("#order").val());
-    for (let i = 0; i <= order; i++) {
-        const letter = String.fromCharCode(97 + i);
-        params.set(letter, $(`#${letter}`).val());
-    }
-    params.set('min-x', $("#min-x").val());
-    params.set('max-x', $("#max-x").val());
-    params.set('min-y', $("#min-y").val());
-    params.set('max-y', $("#max-y").val());
-    params.set('order', order);
-    window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
-}
-
-function loadParametersFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('order')) {
-        $("#order").val(params.get('order'));
-    }
-    const order = parseInt($("#order").val());
-    for (let i = 0; i <= MAX_ORDER; i++) {
-        const letter = String.fromCharCode(97 + i);
-        const input = $(`#${letter}`);
-        if (params.has(letter) && i <= order) {
-            input.val(params.get(letter));
-            input.closest('.input-group').show();
-        } else {
-            input.closest('.input-group').hide();
+    function saveParametersToURL() {
+        const params = new URLSearchParams();
+        const order = parseInt($("#order").val());
+        for (let i = 0; i <= order; i++) {
+            const letter = String.fromCharCode(97 + i);
+            params.set(letter, $(`#${letter}`).val());
         }
+        params.set('min-x', $("#min-x").val());
+        params.set('max-x', $("#max-x").val());
+        params.set('min-y', $("#min-y").val());
+        params.set('max-y', $("#max-y").val());
+        params.set('order', order);
+        window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
-    $("#min-x").val(params.get('min-x') || 0);
-    $("#max-x").val(params.get('max-x') || 100);
-    $("#min-y").val(params.get('min-y') || 0);
-    $("#max-y").val(params.get('max-y') || 100);
-}
+
+    function loadParametersFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('order')) {
+            $("#order").val(params.get('order'));
+        }
+        const order = parseInt($("#order").val());
+        for (let i = 0; i <= MAX_ORDER; i++) {
+            const letter = String.fromCharCode(97 + i);
+            const input = $(`#${letter}`);
+            if (params.has(letter) && i <= order) {
+                input.val(params.get(letter));
+                input.closest('.input-group').show();
+            } else {
+                input.closest('.input-group').hide();
+            }
+        }
+        $("#min-x").val(params.get('min-x') || 0);
+        $("#max-x").val(params.get('max-x') || 100);
+        $("#min-y").val(params.get('min-y') || 0);
+        $("#max-y").val(params.get('max-y') || 100);
+    }
 
     $("#reset-button").on("click", function() {
         const baseUrl = window.location.href.split('?')[0];
@@ -212,6 +211,40 @@ function loadParametersFromURL() {
     });
 
     $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
-    
+
+    // Initialize parameters on load
     initializeParameters();
+
+    // New Code: Add functionality to handle CSV input and plotting
+
+    const plotButton = $("#plot-button");
+    const sidebar = $("#sidebar");
+    const plotPointsButton = $("#plot-points-button");
+    const csvInput = $("#csv-input");
+
+    // Function to toggle sidebar
+    plotButton.on('click', () => {
+        sidebar.toggleClass('sidebar-open');
+    });
+
+    // Function to plot points from CSV input
+    plotPointsButton.on('click', () => {
+        const data = csvInput.val().trim().split('\n').map(line => {
+            const [x, y] = line.split(',').map(Number);
+            return { x, y };
+        });
+
+        const xValues = data.map(point => point.x);
+        const yValues = data.map(point => point.y);
+
+        const trace = {
+            x: xValues,
+            y: yValues,
+            mode: 'markers',
+            type: 'scatter'
+        };
+
+        Plotly.addTraces('plot', [trace]);
+        sidebar.removeClass('sidebar-open'); // Close the sidebar after plotting
+    });
 });
