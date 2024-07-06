@@ -1,7 +1,3 @@
-Here's a thorough README for your Polynomial Visualizer web application:
-
----
-
 # Polynomial Visualizer
 
 Polynomial Visualizer is a web application that allows users to visualize polynomial functions. Users can interactively change the parameters of the polynomial and see the resulting graph update in real-time.
