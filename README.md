@@ -1,33 +1,26 @@
 # Polynomial Visualizer
 
-Polynomial Visualizer is a web application that allows users to visualize polynomial functions. Users can interactively change the parameters of the polynomial and see the resulting graph update in real-time.
+This web application allows users to perform polynomial regression on a set of data points and visualize the resulting polynomial curve. The app provides an intuitive interface to input data points, configure polynomial order, and adjust coefficients interactively.
+
+### Features
+
+- **Data Input**: Enter data points manually or via CSV input.
+- **Polynomial Regression**: Fit polynomial curves to the data points with adjustable order from 1 to 6.
+- **Coefficient Adjustment**: Modify polynomial coefficients dynamically and see the effect on the curve in real-time.
+- **Visualization**: Interactive plotting using Plotly, displaying both the fitted polynomial and the original data points.
+- **URL Parameters**: Save and share your configurations via URL parameters.
+- **Responsive Design**: Adjusts the plot to fit any screen size.
 
 ![Screenshot](screenshot.png?raw=true "Screenshot of Plotting Window")
 
-## Features
+### Usage
 
-- Interactive user interface to adjust polynomial parameters.
-- Visualization of polynomial graphs using Plotly.
-- Adjustable axes ranges for better graph analysis.
-- Reset functionality to quickly revert to default settings.
-
-## Technologies Used
-
-- HTML5
-- CSS3
-- JavaScript
-- jQuery
-- jQuery UI
-- Plotly.js
-
-## Getting Started
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- A modern web browser (e.g., Google Chrome, Mozilla Firefox)
-- An internet connection (for loading external libraries)
+1. **Input Data**: Enter data points in the provided input field or load from a CSV file.
+2. **Set Polynomial Order**: Select the desired polynomial order (degree) for fitting.
+3. **Adjust Coefficients**: Use the sliders or input fields to adjust the polynomial coefficients manually.
+4. **Specify Intercept**: Optionally set a custom intercept value.
+5. **Update Plot**: The polynomial curve and data points are plotted interactively as parameters are adjusted.
+6. **Save and Share**: Configurations can be saved and shared using URL parameters.
 
 ### Installation
 
@@ -45,26 +38,27 @@ Ensure you have the following installed:
 
 3. Open `index.html` in your web browser.
 
-### Usage
-
-1. **Order Selection**: Use the input field labeled `Order` to set the degree of the polynomial (1-6).
-2. **X-axis Range**: Adjust the minimum and maximum X values using the respective input fields.
-3. **Y-axis Range**: Adjust the minimum and maximum Y values using the respective input fields.
-4. **Parameters**: Adjust the polynomial parameters in the dynamically generated input fields.
-5. **Reset**: Click the `Reset` button to revert all settings to their default values.
-6. The polynomial formula and its graph will be displayed and updated in real-time.
-
 ## File Structure
 
 - `index.html`: The main HTML file that contains the structure of the web application.
 - `styles.css`: The CSS file for styling the web application.
 - `script.js`: The JavaScript file containing the logic for interactive elements and visualization.
 
+## Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- jQuery
+- jQuery UI
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests for improvements and bug fixes.
 
 1. Fork the repository.
 2. Create your feature branch (`git checkout -b feature/fooBar`).
@@ -74,9 +68,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-- [jQuery](https://jquery.com/)
-- [jQuery UI](https://jqueryui.com/)
-- [Plotly.js](https://plotly.com/javascript/)
+- **Plotly.js**: For plotting the polynomial curve and data points.
+- **Polyfit.js**: Custom script for performing polynomial regression.
+- **jQuery**: For DOM manipulation and event handling.
 
 ---
 
