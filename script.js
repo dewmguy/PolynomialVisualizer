@@ -1,9 +1,30 @@
-$(document).ready(function() {
+$(document).ready(function() { //current
     const MAX_ORDER = 6;
     let csvPoints = [];
 
-    function encodeBase64(data) { return btoa(JSON.stringify(data)); }
-    function decodeBase64(encodedData) { return JSON.parse(atob(encodedData)); }
+    function encodeBase64(data) {
+        return btoa(JSON.stringify(data));
+    }
+
+    function decodeBase64(encodedData) {
+        return JSON.parse(atob(encodedData));
+    }
+
+    function PolynomialRegression(x, y, order) {
+        const polyfit = new Polyfit(x, y);
+        const coefficients = polyfit.computeCoefficients(order);
+        
+        return {
+            getCoefficients: () => coefficients,
+            setIntercept: (intercept) => {
+                const modifiedCoefficients = coefficients.slice();
+                modifiedCoefficients[modifiedCoefficients.length - 1] = intercept;
+                return {
+                    getCoefficients: () => modifiedCoefficients,
+                };
+            }
+        };
+    }
 
     function updatePlot() {
         const params = getParameters();
@@ -19,7 +40,7 @@ $(document).ready(function() {
         for (let i = minX; i <= maxX; i += 0.1) {
             let yi = 0;
             for (let j = 0; j <= order; j++) {
-                yi += params[j] * Math.pow(i, order - j);
+                yi += params[j] * Math.pow(i, j);
             }
             x.push(i);
             y.push(yi);
@@ -135,20 +156,20 @@ $(document).ready(function() {
         return params;
     }
 
-    function updateDebugOutput(params, order) {
-        let formula = "y = ";
-        for (let i = 0; i <= order; i++) {
-            const coefficient = parseFloat(params[i]);
-            let term = `${coefficient}x<sup>${order - i}</sup>`;
-            if (order - i === 0) term = `${coefficient}`;
-            else if (order - i === 1) term = `${coefficient}x`;
-            if (i > 0 && params[i] >= 0) term = ` + ${term}`;
-            formula += term;
-        }
-        formula = formula.replace(/([^e])([-+])/g, '$1&nbsp;$2&nbsp;');
-        formula = formula.replace(/(&nbsp;|\s)+/g, '&nbsp;');
-        $("#debug-output").html(formula);
+function updateDebugOutput(params, order) {
+    let formula = "y = ";
+    for (let i = 0; i <= order; i++) {
+        const coefficient = parseFloat(params[i]).toFixed(10);
+        let term = `${coefficient}x<sup>${i}</sup>`;
+        if (i === 0) term = `${coefficient}`;
+        else if (i === 1) term = `${coefficient}x`;
+        if (i > 0 && params[i] >= 0) term = ` + ${term}`;
+        formula += term;
     }
+    formula = formula.replace(/([^e])([-+])/g, '$1&nbsp;$2&nbsp;');
+    formula = formula.replace(/(&nbsp;|\s)+/g, '&nbsp;');
+    $("#debug-output").html(formula);
+}
 
     function resetParameters() {
         $("#min-x, #min-y").val(0);
@@ -188,15 +209,18 @@ $(document).ready(function() {
 
     function loadParametersFromURL() {
         const params = new URLSearchParams(window.location.search);
-        if (params.has('order')) {
-            $("#order").val(params.get('order'));
-        }
+        if (params.has('order')) { $("#order").val(params.get('order')); }
         const order = parseInt($("#order").val());
+
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
             const input = $(`#${letter}`);
-            if (params.has(letter) && i <= order) {
-                input.val(params.get(letter));
+            if (i <= order) {
+                if (params.has(letter)) {
+                    input.val(params.get(letter));
+                } else {
+                    input.val(0);
+                }
                 input.closest('.input-group').show();
             } else {
                 input.closest('.input-group').hide();
@@ -214,6 +238,34 @@ $(document).ready(function() {
         }
     }
 
+    function loadParametersFromURLold() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('order')) { $("#order").val(params.get('order')); }
+        const order = parseInt($("#order").val());
+
+        for (let i = 0; i <= MAX_ORDER; i++) {
+            const letter = String.fromCharCode(97 + i);
+            const input = $(`#${letter}`);
+            if (params.has(letter) && i <= order) {
+                alert('firing');
+                input.val(params.get(letter));
+                input.closest('.input-group').show();
+            }
+            else {
+                input.closest('.input-group').hide();
+            }
+        }
+        $("#min-x").val(params.get('min-x') || 0);
+        $("#max-x").val(params.get('max-x') || 100);
+        $("#min-y").val(params.get('min-y') || 0);
+        $("#max-y").val(params.get('max-y') || 100);
+
+        if (params.has('csvPoints')) {
+            csvPoints = decodeBase64(params.get('csvPoints'));
+            const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
+            $("#csv-input").val(csvText);
+        }
+    }
 
     $("#reset-button").on("click", function() {
         const baseUrl = window.location.href.split('?')[0];
@@ -238,6 +290,12 @@ $(document).ready(function() {
         initializeParameters();
     });
 
+    $("#poly-order").on("change keyup", function() {
+        $("#order").val($(this).val());
+        saveParametersToURL();
+        initializeParameters();
+    });
+
     $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
 
     // Initialize parameters on load
@@ -246,9 +304,15 @@ $(document).ready(function() {
     // New Code: Add functionality to handle CSV input and plotting
 
     const plotButton = $("#plot-button");
+    const plotCancel = $("#plot-cancel");
     const sidebar = $("#sidebar");
     const plotPointsButton = $("#plot-points-button");
     const csvInput = $("#csv-input");
+
+    // Function to close sidebar
+    plotCancel.on('click', () => {
+        sidebar.toggleClass('sidebar-open');
+    });
 
     // Function to toggle sidebar
     plotButton.on('click', () => {
@@ -257,14 +321,43 @@ $(document).ready(function() {
 
     // Function to plot points from CSV input
     plotPointsButton.on('click', () => {
-        csvPoints = csvInput.val().trim().split('\n').map(line => {
-            const [x, y] = line.trim().split(/[, \t]+/).map(Number);
-            return { x, y };
-        });
+        if($("#csv-input").val()) {
+            csvPoints = csvInput.val().trim().split('\n').map(line => {
+                const [x, y] = line.trim().split(/[,\s\t]+/).map(Number);
+                return { x, y };
+            });
+            updatePlot();
+            saveParametersToURL();
+        }
+    });
 
-        updatePlot();
-        saveParametersToURL();
-        sidebar.removeClass('sidebar-open'); // Close the sidebar after plotting
+    // Function to show generate form
+    $("#plot-generate-button").on('click', () => {
+        $("#generate-form").toggle();
+    });
+
+    // Function to generate polynomial and plot it
+    $("#generate-button").on('click', () => {
+        const order = parseInt($("#poly-order").val());
+        const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
+
+        if (csvPoints.length > 0) {
+            const x = csvPoints.map(point => point.x);
+            const y = csvPoints.map(point => point.y);
+            const polyfit = new Polyfit(x, y);
+            let coefficients = polyfit.computeCoefficients(order);
+            
+            coefficients.forEach((c, i) => {
+                if (i <= MAX_ORDER) {
+                    $(`#${String.fromCharCode(97 + i)}`).val(c.toFixed(10));
+                }
+            });
+
+            initializeSliders();
+            updatePlot();
+            saveParametersToURL();
+            $("#order").val(order);
+        }
     });
 
 });

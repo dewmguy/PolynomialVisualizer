@@ -9,17 +9,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="polyfit.js"></script>
 </head>
 <body>
     <div class="controls">
         <div class="group">
             <div class="input-group">
                 <button id="reset-button">Reset</button>
-                <button id="plot-button">Plot</button> <!-- Add plot button -->
+                <button id="plot-button">Plot</button>
             </div>
             <div class="input-group">
                 <label for="order">Order:</label>
-                <input type="number" id="order" value="0" min="1" max="6" step="1">
+                <input type="number" id="order" value="1" min="1" max="6" step="1">
             </div>
             <div class="input-group">
                 <label for="min-x">-</label>
@@ -42,10 +43,16 @@
     <div class="formula" id="debug-output"></div>
     <div id="plot"></div>
 
-    <!-- Sidebar for input -->
     <div id="sidebar" class="sidebar">
-        <textarea id="csv-input" placeholder="Enter points as x,y\nOne per line"></textarea>
+        <textarea id="csv-input" placeholder="Enter points as X Y&#10;Separate with space or comma&#10;One plot point per line"></textarea>
         <button id="plot-points-button">Plot Points</button>
+        <button id="plot-generate-button">Plot Graph</button>
+        <div id="generate-form" style="display: none;">
+            <label for="poly-order">Order: (1-6)</label>
+            <input type="number" id="poly-order" min="1" max="6" value="1">
+            <button id="generate-button">Generate</button>
+        </div>
+        <button class="cancel" id="plot-cancel">Close</button>
     </div>
 
     <script src="script.js"></script>
