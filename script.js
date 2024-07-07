@@ -1,5 +1,9 @@
 $(document).ready(function() {
     const MAX_ORDER = 6;
+    let csvPoints = [];
+
+    function encodeBase64(data) { return btoa(JSON.stringify(data)); }
+    function decodeBase64(encodedData) { return JSON.parse(atob(encodedData)); }
 
     function updatePlot() {
         const params = getParameters();
@@ -33,7 +37,19 @@ $(document).ready(function() {
             yaxis: { range: [minY, maxY] }
         };
 
-        Plotly.newPlot('plot', [trace], layout);
+        const traces = [trace];
+
+        if (csvPoints.length > 0) {
+            const csvTrace = {
+                x: csvPoints.map(point => point.x),
+                y: csvPoints.map(point => point.y),
+                mode: 'markers',
+                type: 'scatter'
+            };
+            traces.push(csvTrace);
+        }
+
+        Plotly.newPlot('plot', traces, layout);
         updateDebugOutput(params, order);
     }
 
@@ -162,6 +178,11 @@ $(document).ready(function() {
         params.set('min-y', $("#min-y").val());
         params.set('max-y', $("#max-y").val());
         params.set('order', order);
+
+        if (csvPoints.length > 0) {
+            params.set('csvPoints', encodeBase64(csvPoints));
+        }
+
         window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
 
@@ -185,7 +206,14 @@ $(document).ready(function() {
         $("#max-x").val(params.get('max-x') || 100);
         $("#min-y").val(params.get('min-y') || 0);
         $("#max-y").val(params.get('max-y') || 100);
+
+        if (params.has('csvPoints')) {
+            csvPoints = decodeBase64(params.get('csvPoints'));
+            const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
+            $("#csv-input").val(csvText);
+        }
     }
+
 
     $("#reset-button").on("click", function() {
         const baseUrl = window.location.href.split('?')[0];
@@ -229,22 +257,14 @@ $(document).ready(function() {
 
     // Function to plot points from CSV input
     plotPointsButton.on('click', () => {
-        const data = csvInput.val().trim().split('\n').map(line => {
-            const [x, y] = line.split(',').map(Number);
+        csvPoints = csvInput.val().trim().split('\n').map(line => {
+            const [x, y] = line.trim().split(/[, \t]+/).map(Number);
             return { x, y };
         });
 
-        const xValues = data.map(point => point.x);
-        const yValues = data.map(point => point.y);
-
-        const trace = {
-            x: xValues,
-            y: yValues,
-            mode: 'markers',
-            type: 'scatter'
-        };
-
-        Plotly.addTraces('plot', [trace]);
+        updatePlot();
+        saveParametersToURL();
         sidebar.removeClass('sidebar-open'); // Close the sidebar after plotting
     });
+
 });
