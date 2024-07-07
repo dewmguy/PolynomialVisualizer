@@ -2,6 +2,8 @@
 
 Polynomial Visualizer is a web application that allows users to visualize polynomial functions. Users can interactively change the parameters of the polynomial and see the resulting graph update in real-time.
 
+![Screenshot](screenshot.png?raw=true "Screenshot of Plotting Window")
+
 ## Features
 
 - Interactive user interface to adjust polynomial parameters.
