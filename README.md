@@ -32,7 +32,7 @@ Ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone git@github.com:dewmguy/PolynomialVisualizer.git
+   git clone https://github.com/dewmguy/PolynomialVisualizer.git
    ```
 
 2. Navigate to the project directory:
