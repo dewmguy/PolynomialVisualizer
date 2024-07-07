@@ -62,8 +62,8 @@ $(document).ready(function() {
     function updateSlider(sliderId, currentId) {
         const value = parseFloat($(currentId).val()) || 0;
         const step = calculateStep(value);
-        const min = value / 2;
-        const max = value * 1.5;
+        const min = value - Math.abs(value * 0.5);
+        const max = value + Math.abs(value * 1.5);
 
         $(sliderId).slider({
             min: min,
@@ -80,8 +80,8 @@ $(document).ready(function() {
         $(currentId).on("input", function() {
             const newValue = parseFloat($(this).val()) || 0;
             $(sliderId).slider("value", newValue);
-            $(sliderId).slider("option", "min", newValue / 2);
-            $(sliderId).slider("option", "max", newValue * 1.5);
+            $(sliderId).slider("option", "min", newValue - Math.abs(newValue * 0.5));
+            $(sliderId).slider("option", "max", newValue + Math.abs(newValue * 1.5));
             $(sliderId).slider("option", "step", calculateStep(newValue));
             updatePlot();
             saveParametersToURL();
