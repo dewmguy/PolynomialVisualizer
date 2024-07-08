@@ -13,15 +13,12 @@ $(document).ready(function() { //current
     function PolynomialRegression(x, y, order) {
         const polyfit = new Polyfit(x, y);
         const coefficients = polyfit.computeCoefficients(order);
-        
         return {
             getCoefficients: () => coefficients,
             setIntercept: (intercept) => {
                 const modifiedCoefficients = coefficients.slice();
                 modifiedCoefficients[modifiedCoefficients.length - 1] = intercept;
-                return {
-                    getCoefficients: () => modifiedCoefficients,
-                };
+                return { getCoefficients: () => modifiedCoefficients, };
             }
         };
     }
@@ -39,9 +36,7 @@ $(document).ready(function() { //current
 
         for (let i = minX; i <= maxX; i += 0.1) {
             let yi = 0;
-            for (let j = 0; j <= order; j++) {
-                yi += params[j] * Math.pow(i, j);
-            }
+            for (let j = 0; j <= order; j++) { yi += params[j] * Math.pow(i, j); }
             x.push(i);
             y.push(yi);
         }
@@ -117,9 +112,8 @@ $(document).ready(function() { //current
             if (i <= order) {
                 slider.show();
                 updateSlider(`#slider-${letter}`, `#${letter}`);
-            } else {
-                slider.hide();
             }
+            else { slider.hide(); }
         }
     }
 
@@ -127,7 +121,6 @@ $(document).ready(function() { //current
         const order = parseInt($("#order").val());
         const parameterGroup = $("#parameter-group");
         parameterGroup.empty();
-
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
             const step = calculateStep(0.00001);
@@ -139,7 +132,6 @@ $(document).ready(function() { //current
                 </div>
             `);
         }
-
         loadParametersFromURL();
         initializeSliders();
         updatePlot();
@@ -156,31 +148,30 @@ $(document).ready(function() { //current
         return params;
     }
 
-function updateDebugOutput(params, order) {
-    let formula = "y = ";
-    for (let i = 0; i <= order; i++) {
-        const coefficient = parseFloat(params[i]).toFixed(10);
-        let term = `${coefficient}x<sup>${i}</sup>`;
-        if (i === 0) term = `${coefficient}`;
-        else if (i === 1) term = `${coefficient}x`;
-        if (i > 0 && params[i] >= 0) term = ` + ${term}`;
-        formula += term;
+    function updateDebugOutput(params, order) {
+        const debugObj = $("#debug-output");
+        let formula = "y = ";
+        for (let i = 0; i <= order; i++) {
+            const coefficient = parseFloat(params[i]).toFixed(10);
+            let term = `${coefficient}x<sup>${i}</sup>`;
+            if (i === 0) term = `${coefficient}`;
+            else if (i === 1) term = `${coefficient}x`;
+            if (i > 0 && params[i] >= 0) term = ` + ${term}`;
+            formula += term;
+        }
+        formula = formula.replace(/([^e])([-+])/g, '$1&nbsp;$2&nbsp;');
+        formula = formula.replace(/(&nbsp;|\s)+/g, '&nbsp;');
+        $(debugObj).html(`<div class="formula">${formula}</div>`);
     }
-    formula = formula.replace(/([^e])([-+])/g, '$1&nbsp;$2&nbsp;');
-    formula = formula.replace(/(&nbsp;|\s)+/g, '&nbsp;');
-    $("#debug-output").html(formula);
-}
 
     function resetParameters() {
         $("#min-x, #min-y").val(0);
         $("#max-x, #max-y").val(100);
         $("#order").val(4);
-
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
             $(`#${letter}`).val(0);
         }
-
         updatePlot();
         initializeParameters();
         initializeSliders();
@@ -199,11 +190,7 @@ function updateDebugOutput(params, order) {
         params.set('min-y', $("#min-y").val());
         params.set('max-y', $("#max-y").val());
         params.set('order', order);
-
-        if (csvPoints.length > 0) {
-            params.set('csvPoints', encodeBase64(csvPoints));
-        }
-
+        if (csvPoints.length > 0) { params.set('csvPoints', encodeBase64(csvPoints)); }
         window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
 
@@ -211,20 +198,15 @@ function updateDebugOutput(params, order) {
         const params = new URLSearchParams(window.location.search);
         if (params.has('order')) { $("#order").val(params.get('order')); }
         const order = parseInt($("#order").val());
-
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
             const input = $(`#${letter}`);
             if (i <= order) {
-                if (params.has(letter)) {
-                    input.val(params.get(letter));
-                } else {
-                    input.val(0);
-                }
+                if (params.has(letter)) { input.val(params.get(letter)); }
+                else { input.val(0); }
                 input.closest('.input-group').show();
-            } else {
-                input.closest('.input-group').hide();
             }
+            else { input.closest('.input-group').hide(); }
         }
         $("#min-x").val(params.get('min-x') || 0);
         $("#max-x").val(params.get('max-x') || 100);
@@ -251,9 +233,7 @@ function updateDebugOutput(params, order) {
                 input.val(params.get(letter));
                 input.closest('.input-group').show();
             }
-            else {
-                input.closest('.input-group').hide();
-            }
+            else { input.closest('.input-group').hide(); }
         }
         $("#min-x").val(params.get('min-x') || 0);
         $("#max-x").val(params.get('max-x') || 100);
@@ -330,6 +310,18 @@ function updateDebugOutput(params, order) {
             saveParametersToURL();
         }
     });
+    
+    // Function to show or hide the control panel
+    $("#float-button").on("click", function() {
+        $("#panel").toggleClass("float");
+        const isFloating = $("#panel").hasClass("float");
+        $(this).text(isFloating ? "Dock Panel" : "Float Panel");
+        $(window).scrollTop($(document).height());
+    });
+
+    $("#debug-output").on("click", () => {
+        $("#panel").toggle();
+    });
 
     // Function to show generate form
     $("#plot-generate-button").on('click', () => {
@@ -340,19 +332,14 @@ function updateDebugOutput(params, order) {
     $("#generate-button").on('click', () => {
         const order = parseInt($("#poly-order").val());
         const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
-
         if (csvPoints.length > 0) {
             const x = csvPoints.map(point => point.x);
             const y = csvPoints.map(point => point.y);
             const polyfit = new Polyfit(x, y);
             let coefficients = polyfit.computeCoefficients(order);
-            
             coefficients.forEach((c, i) => {
-                if (i <= MAX_ORDER) {
-                    $(`#${String.fromCharCode(97 + i)}`).val(c.toFixed(10));
-                }
+                if (i <= MAX_ORDER) { $(`#${String.fromCharCode(97 + i)}`).val(c.toFixed(10)); }
             });
-
             initializeSliders();
             updatePlot();
             saveParametersToURL();

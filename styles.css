@@ -13,8 +13,6 @@ body {
     align-items: center;
     margin: 0;
     padding: 0;
-    height: 100vh;
-    overflow: hidden;
 }
 
 .controls {
@@ -26,16 +24,34 @@ body {
     background-color: #f7f7f7;
     border-bottom: 1px solid #ddd;
     width: 100vw;
+    z-index: 10;
+}
+
+.float {
+    position: absolute;
+    top: 4vh;
+}
+
+#debug-output {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 4vh;
+    padding: 0 2vh;
+    background-color: #d7d7d7;
+    border-bottom: 1px solid #ddd;
+}
+
+#debug-output:hover {
+    background-color: #b7b7b7;
+    cursor: pointer;
 }
 
 .formula {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 10px 0;
-    background-color: #d7d7d7;
-    border-bottom: 1px solid #ddd;
-    width: 100vw;
+    font-family: consolas,  times new roman, monospace;
 }
 
 .input-group {
@@ -59,7 +75,7 @@ body {
 }
 
 .slider {
-    width: 150px;
+    width: 200px;
 }
 
 .group {
@@ -70,8 +86,8 @@ body {
 }
 
 #plot {
-    width: 99vw;
-    height: 100%;
+    width: 100%;
+    height: 96vh;
 }
 
 .ui-slider .ui-slider-handle {
@@ -81,12 +97,12 @@ body {
 
 .ui-slider .ui-slider-range { background-color: #007bff }
 
-#debug-output { font-family: monospace }
-
 button {
-    padding: .5em 5em;
     border: 1px solid #ddd;
     border-radius: 5px;
+    width: 15ch;
+    height: 2em;
+    cursor: pointer;
 }
 
 .sidebar, .sidebar div {
@@ -127,12 +143,9 @@ button {
 
 .sidebar button {
     width: 100%;
-    padding: 10px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 .sidebar button.cancel { background-color: #797979 }
 .sidebar button.cancel:hover { background-color: #595959 }
