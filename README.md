@@ -2,6 +2,8 @@
 
 This web application allows users to perform polynomial regression on a set of data points and visualize the resulting polynomial curve. The app provides an intuitive interface to input data points, configure polynomial order, and adjust coefficients interactively.
 
+![Screenshot](screenshot.png?raw=true "Screenshot of Plotting Window")
+
 ### Features
 
 - **Data Input**: Enter data points manually or via CSV input.
@@ -11,7 +13,6 @@ This web application allows users to perform polynomial regression on a set of d
 - **URL Parameters**: Save and share your configurations via URL parameters.
 - **Responsive Design**: Adjusts the plot to fit any screen size.
 
-![Screenshot](screenshot.png?raw=true "Screenshot of Plotting Window")
 
 ### Usage
 
