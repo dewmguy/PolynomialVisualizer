@@ -31,6 +31,7 @@ $(document).ready(function() {
         const minY = parseFloat($("#min-y").val()) || 0;
         const maxY = parseFloat($("#max-y").val()) || 100;
         const order = parseInt($("#order").val());
+        const graphTitle = $("#graph-title").val();
 
         const x = [];
         const y = [];
@@ -49,7 +50,7 @@ $(document).ready(function() {
         };
 
         const layout = {
-            title: 'Polynomial Plot',
+            title: graphTitle,
             xaxis: { range: [minX, maxX] },
             yaxis: { range: [minY, maxY] },
             paper_bgcolor: isDarkMode ? '#121212' : '#fff',
@@ -196,6 +197,7 @@ $(document).ready(function() {
         params.set('min-y', $("#min-y").val());
         params.set('max-y', $("#max-y").val());
         params.set('order', order);
+        params.set('graph-title', $("#graph-title").val());
         if (csvPoints.length > 0) { params.set('csvPoints', encodeBase64(csvPoints)); }
         window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
     }
@@ -203,6 +205,7 @@ $(document).ready(function() {
     function loadParametersFromURL() {
         const params = new URLSearchParams(window.location.search);
         if (params.has('order')) { $("#order").val(params.get('order')); }
+        if (params.has('graph-title')) { $("#graph-title").val(params.get('graph-title')); }
         const order = parseInt($("#order").val());
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
@@ -247,16 +250,21 @@ $(document).ready(function() {
         $("#max-y").val(params.get('max-y') || 100);
 
         if (params.has('csvPoints')) {
-            csvPoints = decodeBase64(params.get('csvPoints'));
-            const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
-            $("#csv-input").val(csvText);
+          csvPoints = decodeBase64(params.get('csvPoints'));
+          const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
+          $("#csv-input").val(csvText);
         }
     }
     
+    $("#graph-title").on('input change', function() {
+      updatePlot();
+      saveParametersToURL();
+    });
+    
     $("#theme-toggle").on('click', function() {
-        isDarkMode = !isDarkMode;
-        $('body').toggleClass('dark');
-        updatePlot();
+      isDarkMode = !isDarkMode;
+      $('body').toggleClass('dark');
+      updatePlot();
     });
     
     $("form").submit(function(e) {
@@ -264,32 +272,32 @@ $(document).ready(function() {
     });
 
     $("#reset-button").on("click", function() {
-        const baseUrl = window.location.href.split('?')[0];
-        window.location.href = baseUrl;
+      const baseUrl = window.location.href.split('?')[0];
+      window.location.href = baseUrl;
     });
 
     $("#parameter-group").on("change keyup", "input[type='number']", function() {
-        let id = $(this).attr("id");
-        $("#" + id).attr("step", calculateStep($(this).val()));
-        updatePlot();
-        initializeSliders();
-        saveParametersToURL();
+      let id = $(this).attr("id");
+      $("#" + id).attr("step", calculateStep($(this).val()));
+      updatePlot();
+      initializeSliders();
+      saveParametersToURL();
     });
 
     $("#min-x, #max-x, #min-y, #max-y").on("change keyup", function() {
-        updatePlot();
-        saveParametersToURL();
+      updatePlot();
+      saveParametersToURL();
     });
 
     $("#order").on("change keyup", function() {
-        saveParametersToURL();
-        initializeParameters();
+      saveParametersToURL();
+      initializeParameters();
     });
 
     $("#poly-order").on("change keyup", function() {
-        $("#order").val($(this).val());
-        saveParametersToURL();
-        initializeParameters();
+      $("#order").val($(this).val());
+      saveParametersToURL();
+      initializeParameters();
     });
 
     $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
