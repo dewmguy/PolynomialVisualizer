@@ -1,6 +1,7 @@
-$(document).ready(function() { //current
+$(document).ready(function() {
     const MAX_ORDER = 6;
     let csvPoints = [];
+    let isDarkMode = true;
 
     function encodeBase64(data) {
         return btoa(JSON.stringify(data));
@@ -50,7 +51,12 @@ $(document).ready(function() { //current
         const layout = {
             title: 'Polynomial Plot',
             xaxis: { range: [minX, maxX] },
-            yaxis: { range: [minY, maxY] }
+            yaxis: { range: [minY, maxY] },
+            paper_bgcolor: isDarkMode ? '#121212' : '#fff',
+            plot_bgcolor: isDarkMode ? '#121212' : '#fff',
+            font: {
+                color: isDarkMode ? '#e0e0e0' : '#000'
+            }
         };
 
         const traces = [trace];
@@ -246,6 +252,16 @@ $(document).ready(function() { //current
             $("#csv-input").val(csvText);
         }
     }
+    
+    $("#theme-toggle").on('click', function() {
+        isDarkMode = !isDarkMode;
+        $('body').toggleClass('dark');
+        updatePlot();
+    });
+    
+    $("form").submit(function(e) {
+      e.preventDefault();
+    });
 
     $("#reset-button").on("click", function() {
         const baseUrl = window.location.href.split('?')[0];
@@ -283,20 +299,23 @@ $(document).ready(function() { //current
 
     // New Code: Add functionality to handle CSV input and plotting
 
-    const plotButton = $("#plot-button");
-    const plotCancel = $("#plot-cancel");
+    const plotButton = $("#sidebar-toggle");
+    const panelButton = $("#panel-toggle");
     const sidebar = $("#sidebar");
     const plotPointsButton = $("#plot-points-button");
     const csvInput = $("#csv-input");
 
-    // Function to close sidebar
-    plotCancel.on('click', () => {
-        sidebar.toggleClass('sidebar-open');
+    panelButton.on("click", function() {
+      $(this).toggleClass('open').toggleClass('close');
+      $("#panel").toggle();
+      $(this).find('i').toggleClass('fa-xmark').toggleClass('fa-arrow-down');
     });
 
     // Function to toggle sidebar
-    plotButton.on('click', () => {
-        sidebar.toggleClass('sidebar-open');
+    plotButton.on('click', function() {
+      $(this).toggleClass('open').toggleClass('close');
+      $("#sidebar").toggleClass('open');
+      $(this).find('i').toggleClass('fa-arrow-left').toggleClass('fa-xmark');
     });
 
     // Function to plot points from CSV input
@@ -315,12 +334,8 @@ $(document).ready(function() { //current
     $("#float-button").on("click", function() {
         $("#panel").toggleClass("float");
         const isFloating = $("#panel").hasClass("float");
-        $(this).text(isFloating ? "Dock Panel" : "Float Panel");
+        $(this).text(isFloating ? "Panel: Dock" : "Panel: Float");
         $(window).scrollTop($(document).height());
-    });
-
-    $("#debug-output").on("click", () => {
-        $("#panel").toggle();
     });
 
     // Function to show generate form

@@ -6,19 +6,23 @@
     <title>Polynomial Visualizer</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/666b0b7246.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="polyfit.js"></script>
+    <script src="script.js"></script>
 </head>
-<body>
+<body class="dark">
+    <div id="panel-toggle" class="close"><i class="fa-solid fa-xmark"></i></div>
+    <div id="sidebar-toggle" class="open"><i class="fa-solid fa-arrow-left"></i></div>
     <div id="panel" class="controls">
         <div class="group">
             <div class="input-group">
-                <button id="float-button">Float Panel</button>
+                <button id="theme-toggle">Theme: Dark</button>
             </div>
             <div class="input-group">
-                <button id="plot-button">Plot Panel</button>
+                <button id="float-button">Panel: Float</button>
             </div>
             <div class="input-group">
                 <button id="reset-button">Reset</button>
@@ -51,17 +55,19 @@
     <div id="plot"></div>
 
     <div id="sidebar" class="sidebar">
-        <textarea id="csv-input" placeholder="Enter points as X Y&#10;Separate with space or comma&#10;One plot point per line"></textarea>
-        <button id="plot-points-button">Plot Points</button>
-        <button id="plot-generate-button">Plot Graph</button>
-        <div id="generate-form" style="display: none;">
-            <label for="poly-order">Order: (1-6)</label>
-            <input type="number" id="poly-order" min="1" max="6" value="1">
-            <button id="generate-button">Generate</button>
-        </div>
-        <button class="cancel" id="plot-cancel">Close Panel</button>
+        <form>
+            <h3>Plot Data</h3>
+            <textarea id="csv-input" placeholder="Enter points as X Y&#10;Separate with space or comma&#10;One plot point per line"></textarea>
+            <button id="plot-points-button">Plot Points</button>
+            <div>
+                <button id="plot-generate-button">Plot Graph</button>
+                <div id="generate-form" style="display: none;">
+                    <label for="poly-order">Order: (1-6)</label>
+                    <input type="number" id="poly-order" min="1" max="6" value="1">
+                    <button id="generate-button">Generate</button>
+                </div>
+            </div>
+        </form>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>

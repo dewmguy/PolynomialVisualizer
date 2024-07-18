@@ -1,77 +1,132 @@
 * {
-    margin: 0;
-    border: 0;
-    padding: 0;
-    outline: 0;
-    box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-    gap: 50px;
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #ddd;
-    width: 100vw;
-    z-index: 10;
+body.dark {
+  background: #121212;
+  color: #E0E0E0;
 }
 
-.float {
-    position: absolute;
-    top: 4vh;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
+body.dark textarea {
+  border-color: #333;
+  background: #121212;
+  color: #DDD;
+}
+
+#panel-toggle, #sidebar-toggle {
+  position: absolute;
+  top: 15px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  width: 25px;
+  font-size: 14px;
+  line-height: 25px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 11;
+}
+body.dark #panel-toggle, body.dark #sidebar-toggle {
+  border-color: #888;
+}
+
+#sidebar-toggle { right: 15px }
+#panel-toggle { left: 15px }
+
+#panel-toggle.open, #sidebar-toggle.open { background: #D0D0D7 }
+body.dark #panel-toggle.open, body.dark #sidebar-toggle.open { background: #666 }
+#panel-toggle.open:hover, #sidebar-toggle.open:hover { background: #B7B7B7 }
+
+#panel-toggle.close, #sidebar-toggle.close { background: #D0D0D7 }
+body.dark #panel-toggle.close, #sidebar-toggle.close { background: #666 }
+#panel-toggle.close:hover, #sidebar-toggle.close:hover {
+  background: #A33;
+  color: #FFF;
 }
 
 #debug-output {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 4vh;
-    padding: 0 2vh;
-    background-color: #d7d7d7;
-    border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 6.5vh;
+  padding: 0 2vh;
+  background-color: #EFEFEF;
+  border-bottom: 1px solid #DEDEDE;
 }
 
-#debug-output:hover {
-    background-color: #b7b7b7;
-    cursor: pointer;
+body.dark #debug-output {
+  background: #222;
+  border-bottom: #333;
+}
+
+#plot {
+    width: 100%;
+    height: 93.5vh;
+}
+
+#panel.float {
+  position: absolute;
+  top: 6.5vh;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  gap: 50px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ddd;
+  width: 100vw;
+  z-index: 10;
+}
+
+body.dark .controls {
+  background-color: #1E1E1E;
+  border-color: #333;
 }
 
 .formula {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    font-family: consolas,  times new roman, monospace;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: consolas,  times new roman, monospace;
 }
 
 .input-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-direction: row;
-    gap: 15px;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
 }
 
 .input-group label {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-.input-group input {
-    width: 18ch;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+body.dark label, body.dark label {
+  color: #E0E0E0;
 }
 
 .slider {
@@ -85,25 +140,12 @@ body {
     flex-direction: column;
 }
 
-#plot {
-    width: 100%;
-    height: 96vh;
-}
-
 .ui-slider .ui-slider-handle {
     background-color: #007bff;
     border: none;
 }
 
 .ui-slider .ui-slider-range { background-color: #007bff }
-
-button {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 15ch;
-    height: 2em;
-    cursor: pointer;
-}
 
 .sidebar, .sidebar div {
     display: flex;
@@ -118,47 +160,74 @@ button {
     height: 100%;
     padding: 15px;
     border-left: 1px solid #ddd;
-    background-color: #f3f3f3;
+    background-color: #EFEFEF;
     transition: right 0.3s ease;
     z-index: 10;
 }
+body.dark .sidebar {
+  background: #1E1E1E;
+  border-color: #333;
+}
 .sidebar div {
-    background: #d7d7d7;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  background: #d7d7d7;
+  padding: 15px;
+  border-radius: 5px;
 }
-.sidebar div label {
-    margin-bottom: -10px;
-}
-
-.sidebar textarea {
-    min-height: 5.5em;
-    height: 100%;
-    padding: 15px;
-    resize: vertical;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
+body.dark .sidebar div { background: #333 }
+.sidebar div label { margin-bottom: -10px }
 
 .sidebar button {
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    border: none;
+  width: 100%;
+  border: none;
 }
-.sidebar button.cancel { background-color: #797979 }
-.sidebar button.cancel:hover { background-color: #595959 }
 .sidebar button:hover { background-color: #0056b3 }
 
 .sidebar input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  width: 100%;
+  padding: 8px;
 }
 
-.sidebar-open { right: 0 }
+.sidebar.open { right: 0 }
 
 .red { color: #F00 !important }
 .small { font-size: .7em !important }
+
+input, textarea, button {
+  border: 1px solid #DDD;
+  width: 18ch;
+  padding: 5px;
+  border-radius: 5px;
+  background: #EFEFEF;
+  color: #000;
+}
+
+textarea {
+  height: 100%;
+  width: 100%;
+  padding: 15px;
+  resize: none;
+  background: #FFF;
+  color: #000;
+}
+
+button {
+  background-color: #007bff;
+  color: #FFF;
+  height: 35px;
+  cursor: pointer;
+}
+
+body.dark input, body.dark textarea {
+  border: 1px solid #333;
+  background: #121212;
+  color: #DDD;
+}
+
+body.dark button {
+  background: #005ADD;
+}
+
+body.dark .input-group button {
+  background: #444;
+  border: 1px solid #333;
+}
