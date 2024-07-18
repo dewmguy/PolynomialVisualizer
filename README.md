@@ -1,4 +1,4 @@
-# Polynomial Visualizer
+# [Polynomial Visualizer](https://dewmguy.github.io/PolynomialVisualizer/)
 
 This web application allows users to perform polynomial regression on a set of data points and visualize the resulting polynomial curve. The app provides an intuitive interface to input data points, configure polynomial order, and adjust coefficients interactively.
 
@@ -31,13 +31,7 @@ This web application allows users to perform polynomial regression on a set of d
    git clone https://github.com/dewmguy/PolynomialVisualizer.git
    ```
 
-2. Navigate to the project directory:
-
-   ```bash
-   cd PolynomialVisualizer
-   ```
-
-3. Open `index.html` in your web browser.
+2. Open `index.html` in your web browser.
 
 ## File Structure
 
@@ -53,26 +47,8 @@ This web application allows users to perform polynomial regression on a set of d
 - jQuery
 - jQuery UI
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests for improvements and bug fixes.
-
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/fooBar`).
-3. Commit your changes (`git commit -am 'Add some fooBar'`).
-4. Push to the branch (`git push origin feature/fooBar`).
-5. Create a new Pull Request.
-
 ## Acknowledgements
 
 - **Plotly.js**: For plotting the polynomial curve and data points.
 - **Polyfit.js**: Custom script for performing polynomial regression.
 - **jQuery**: For DOM manipulation and event handling.
-
----
-
-This README provides an overview of the project, installation instructions, usage guidelines, and other relevant information.
