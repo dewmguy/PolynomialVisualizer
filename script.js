@@ -1,7 +1,13 @@
 $(document).ready(function() {
-    const MAX_ORDER = 6;
+    const MAX_ORDER = 8;
     let csvPoints = [];
     let isDarkMode = true;
+
+    const plotButton = $("#sidebar-toggle");
+    const panelButton = $("#panel-toggle");
+    const sidebar = $("#sidebar");
+    const plotPointsButton = $("#plot-points-button");
+    const csvInput = $("#csv-input");
 
     function encodeBase64(data) {
         return btoa(JSON.stringify(data));
@@ -229,33 +235,6 @@ $(document).ready(function() {
         }
     }
 
-    function loadParametersFromURLold() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('order')) { $("#order").val(params.get('order')); }
-        const order = parseInt($("#order").val());
-
-        for (let i = 0; i <= MAX_ORDER; i++) {
-            const letter = String.fromCharCode(97 + i);
-            const input = $(`#${letter}`);
-            if (params.has(letter) && i <= order) {
-                alert('firing');
-                input.val(params.get(letter));
-                input.closest('.input-group').show();
-            }
-            else { input.closest('.input-group').hide(); }
-        }
-        $("#min-x").val(params.get('min-x') || 0);
-        $("#max-x").val(params.get('max-x') || 100);
-        $("#min-y").val(params.get('min-y') || 0);
-        $("#max-y").val(params.get('max-y') || 100);
-
-        if (params.has('csvPoints')) {
-          csvPoints = decodeBase64(params.get('csvPoints'));
-          const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
-          $("#csv-input").val(csvText);
-        }
-    }
-    
     $("#graph-title").on('input change', function() {
       updatePlot();
       saveParametersToURL();
@@ -264,6 +243,7 @@ $(document).ready(function() {
     $("#theme-toggle").on('click', function() {
       isDarkMode = !isDarkMode;
       $('body').toggleClass('dark');
+      $(this).html($('body').hasClass('dark') ? 'Light Mode' : 'Dark Mode');
       updatePlot();
     });
     
@@ -302,17 +282,6 @@ $(document).ready(function() {
 
     $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
 
-    // Initialize parameters on load
-    initializeParameters();
-
-    // New Code: Add functionality to handle CSV input and plotting
-
-    const plotButton = $("#sidebar-toggle");
-    const panelButton = $("#panel-toggle");
-    const sidebar = $("#sidebar");
-    const plotPointsButton = $("#plot-points-button");
-    const csvInput = $("#csv-input");
-
     panelButton.on("click", function() {
       $(this).toggleClass('open').toggleClass('close');
       $("#panel").toggle();
@@ -342,7 +311,7 @@ $(document).ready(function() {
     $("#float-button").on("click", function() {
         $("#panel").toggleClass("float");
         const isFloating = $("#panel").hasClass("float");
-        $(this).text(isFloating ? "Panel: Dock" : "Panel: Float");
+        $(this).text(isFloating ? "Dock Panel" : "Float Panel");
         $(window).scrollTop($(document).height());
     });
 
@@ -369,5 +338,7 @@ $(document).ready(function() {
             $("#order").val(order);
         }
     });
+    
+    initializeParameters();
 
 });

@@ -16,13 +16,13 @@
 <body class="dark">
     <div id="panel-toggle" class="close"><i class="fa-solid fa-xmark"></i></div>
     <div id="sidebar-toggle" class="open"><i class="fa-solid fa-arrow-left"></i></div>
-    <div id="panel" class="controls">
+    <div id="panel" class="controls float">
         <div class="group">
             <div class="input-group">
-                <button id="theme-toggle">Theme: Dark</button>
+                <button id="theme-toggle">Light Mode</button>
             </div>
             <div class="input-group">
-                <button id="float-button">Panel: Float</button>
+                <button id="float-button">Dock Panel</button>
             </div>
             <div class="input-group">
                 <button id="reset-button">Reset</button>
@@ -35,7 +35,7 @@
             </div>
             <div class="input-group">
                 <label for="order">Order:</label>
-                <input type="number" id="order" value="1" min="1" max="6" step="1">
+                <input type="number" id="order" value="1" min="1" max="8" step="1">
             </div>
             <div class="input-group">
                 <label for="min-x">-</label>
@@ -66,8 +66,8 @@
             <div>
                 <button id="plot-generate-button">Plot Graph</button>
                 <div id="generate-form" style="display: none;">
-                    <label for="poly-order">Order: (1-6)</label>
-                    <input type="number" id="poly-order" min="1" max="6" value="1">
+                    <label for="poly-order">Order:</label>
+                    <input type="number" id="poly-order" min="1" max="8" value="1">
                     <button id="generate-button">Generate</button>
                 </div>
             </div>
