@@ -3,12 +3,6 @@ $(document).ready(function() {
     let csvPoints = [];
     let isDarkMode = true;
 
-    const plotButton = $("#sidebar-toggle");
-    const panelButton = $("#panel-toggle");
-    const sidebar = $("#sidebar");
-    const plotPointsButton = $("#plot-points-button");
-    const csvInput = $("#csv-input");
-
     function encodeBase64(data) {
         return btoa(JSON.stringify(data));
     }
@@ -211,7 +205,12 @@ $(document).ready(function() {
     function loadParametersFromURL() {
         const params = new URLSearchParams(window.location.search);
         if (params.has('order')) { $("#order").val(params.get('order')); }
-        if (params.has('graph-title')) { $("#graph-title").val(params.get('graph-title')); }
+        if (params.has('graph-title')) {
+          $("#graph-title").val(params.get('graph-title'));
+          $("#panel-toggle").toggleClass('open').toggleClass('close');
+          $("#panel").toggle();
+          $("#panel-toggle").find('i').toggleClass('fa-xmark').toggleClass('fa-arrow-down');
+        }
         const order = parseInt($("#order").val());
         for (let i = 0; i <= MAX_ORDER; i++) {
             const letter = String.fromCharCode(97 + i);
@@ -282,23 +281,23 @@ $(document).ready(function() {
 
     $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
 
-    panelButton.on("click", function() {
+    $("#panel-toggle").on("click", function() {
       $(this).toggleClass('open').toggleClass('close');
       $("#panel").toggle();
       $(this).find('i').toggleClass('fa-xmark').toggleClass('fa-arrow-down');
     });
 
     // Function to toggle sidebar
-    plotButton.on('click', function() {
+    $("#sidebar-toggle").on('click', function() {
       $(this).toggleClass('open').toggleClass('close');
       $("#sidebar").toggleClass('open');
       $(this).find('i').toggleClass('fa-arrow-left').toggleClass('fa-xmark');
     });
 
     // Function to plot points from CSV input
-    plotPointsButton.on('click', () => {
+    $("#plot-points-button").on('click', () => {
         if($("#csv-input").val()) {
-            csvPoints = csvInput.val().trim().split('\n').map(line => {
+            csvPoints = $("#csv-input").val().trim().split('\n').map(line => {
                 const [x, y] = line.trim().split(/[,\s\t]+/).map(Number);
                 return { x, y };
             });

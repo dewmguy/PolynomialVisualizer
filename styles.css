@@ -88,6 +88,8 @@ body.dark #debug-output {
   top: 60px;
 }
 
+#graph-title { width: 42ch }
+
 .controls {
   display: flex;
   flex-wrap: wrap;
