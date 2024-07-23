@@ -63,7 +63,7 @@ body.dark #panel-toggle.close, #sidebar-toggle.close { background: #666 }
   color: #FFF;
 }
 
-#debug-output {
+#formula-output {
   display: flex;
   flex-direction: column;
   width: 100vw;
@@ -73,7 +73,7 @@ body.dark #panel-toggle.close, #sidebar-toggle.close { background: #666 }
   border-bottom: 1px solid #DEDEDE;
 }
 
-body.dark #debug-output {
+body.dark #formula-output {
   background: #121212;
   border-bottom: 1px solid #333;
 }
