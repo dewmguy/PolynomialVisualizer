@@ -73,7 +73,7 @@ $(document).ready(function() {
     }
 
     Plotly.newPlot('plot', traces, layout);
-    updateDebugOutput(params, order);
+    updateFormulaOutput(params, order);
   }
 
   function calculateStep(value) {
@@ -155,20 +155,19 @@ $(document).ready(function() {
     return params;
   }
 
-  function updateDebugOutput(params, order) {
-    const debugObj = $("#debug-output");
+  function updateFormulaOutput(params, order) {
+    const formulaObj = $("#formula-output");
     let formula = "y = ";
     for (let i = 0; i <= order; i++) {
       const coefficient = parseFloat(params[i]);
-      let term = `${coefficient}x<sup>${i}</sup>`;
+      let term = `${coefficient}x^${i}`;
       if (i === 0) term = `${coefficient}`;
       else if (i === 1) term = `${coefficient}x`;
       if (i > 0 && params[i] >= 0) term = ` + ${term}`;
       formula += term;
     }
-    formula = formula.replace(/([^e])([-+])/g, '$1&nbsp;$2&nbsp;');
-    formula = formula.replace(/(&nbsp;|\s)+/g, '&nbsp;');
-    $(debugObj).html(`<div class="formula">${formula}</div>`);
+    formula = formula.replace(/([^e])([-+])/g, '$1 $2 ');
+    $(formulaObj).text(formula);
   }
 
   function resetParameters() {
