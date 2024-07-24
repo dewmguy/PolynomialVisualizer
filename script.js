@@ -246,7 +246,7 @@ $(document).ready(function() {
     if (params.has('graph-title')) {
       $("#graph-title").val(params.get('graph-title'));
       $("#panel-toggle").toggleClass('open').toggleClass('close');
-      $("#panel").toggle();
+      $("#panel").hide();
       $("#panel-toggle").find('i').toggleClass('fa-xmark').toggleClass('fa-arrow-down');
     }
     const order = parseInt($("#order").val());
@@ -327,7 +327,6 @@ $(document).ready(function() {
     $(this).find('i').toggleClass('fa-xmark').toggleClass('fa-arrow-down');
   });
 
-  // Function to toggle sidebar
   $("#sidebar-toggle").on('click', function() {
     $(this).toggleClass('open').toggleClass('close');
     $("#sidebar").toggleClass('open');
@@ -346,7 +345,6 @@ $(document).ready(function() {
     }
   });
   
-  // Function to show or hide the control panel
   $("#float-button").on("click", function() {
     $("#panel").toggleClass("float");
     const isFloating = $("#panel").hasClass("float");
@@ -354,12 +352,10 @@ $(document).ready(function() {
     $(window).scrollTop($(document).height());
   });
 
-  // Function to show generate form
   $("#plot-generate-button").on('click', () => {
     $("#generate-form").toggle();
   });
 
-  // Function to generate polynomial and plot it
   $("#generate-button").on('click', () => {
     const order = parseInt($("#poly-order").val());
     const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
