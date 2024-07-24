@@ -157,17 +157,56 @@ $(document).ready(function() {
 
   function updateFormulaOutput(params, order) {
     const formulaObj = $("#formula-output");
-    let formula = "y = ";
+    let htmlFormula = "y = ";
+    let textFormula = "y = ";
+
     for (let i = 0; i <= order; i++) {
       const coefficient = parseFloat(params[i]);
-      let term = `${coefficient}x^${i}`;
-      if (i === 0) term = `${coefficient}`;
-      else if (i === 1) term = `${coefficient}x`;
-      if (i > 0 && params[i] >= 0) term = ` + ${term}`;
-      formula += term;
+      let htmlTerm = `${coefficient}x<sup>${i}</sup>`;
+      let textTerm = `${coefficient}x^${i}`;
+
+      if (i === 0) {
+        htmlTerm = `${coefficient}`;
+        textTerm = `${coefficient}`;
+      }
+      else if (i === 1) {
+        htmlTerm = `${coefficient}x`;
+        textTerm = `${coefficient}x`;
+      }
+
+      if (i > 0 && params[i] >= 0) {
+        htmlTerm = ` + ${htmlTerm}`;
+        textTerm = ` + ${textTerm}`;
+      }
+      else if (i > 0 && params[i] < 0) {
+        htmlTerm = ` - ${Math.abs(coefficient)}x<sup>${i}</sup>`;
+        textTerm = ` - ${Math.abs(coefficient)}x^${i}`;
+      }
+
+      htmlFormula += htmlTerm;
+      textFormula += textTerm;
     }
-    formula = formula.replace(/([^e])([-+])/g, '$1 $2 ');
-    $(formulaObj).text(formula);
+
+    formulaObj.html(`<div class="formula"><span>${htmlFormula}</span></div>`);
+    formulaObj.data('text', textFormula);
+  }
+  
+  function copyFormulaToClipboard() {
+    const formulaOutput = $("#formula-output");
+    const formulaText = formulaOutput.data('text-formula');
+    const originalHtml = formulaOutput.html();
+
+    const tempInput = $("<input>");
+    $("body").append(tempInput);
+    tempInput.val(formulaText).select();
+    document.execCommand("copy");
+    tempInput.remove();
+
+    formulaOutput.html("<div class='formula'>Formula copied to clipboard!</div>");
+
+    setTimeout(() => {
+      formulaOutput.html(originalHtml);
+    }, 2000);
   }
 
   function resetParameters() {
@@ -232,6 +271,8 @@ $(document).ready(function() {
       $("#csv-input").val(csvText);
     }
   }
+  
+  $("#formula-output").on("click", ".formula span", copyFormulaToClipboard);
 
   $("#graph-title").on('input change', function() {
     updatePlot();

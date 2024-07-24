@@ -71,7 +71,14 @@ body.dark #panel-toggle.close, #sidebar-toggle.close { background: #666 }
   padding: 0 2vh;
   background-color: #EFEFEF;
   border-bottom: 1px solid #DEDEDE;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  font-family: consolas,  times new roman, monospace;
+  cursor: default;
 }
+
+.formula span { cursor: pointer }
 
 body.dark #formula-output {
   background: #121212;
@@ -105,13 +112,6 @@ body.dark #formula-output {
 body.dark .controls {
   background-color: #222;
   border-color: #333;
-}
-
-.formula {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  font-family: consolas,  times new roman, monospace;
 }
 
 .input-group {
