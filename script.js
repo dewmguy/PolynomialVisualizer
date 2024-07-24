@@ -193,8 +193,8 @@ $(document).ready(function() {
   
   function copyFormulaToClipboard() {
     const formulaOutput = $("#formula-output");
-    const formulaText = formulaOutput.data('text-formula');
     const originalHtml = formulaOutput.html();
+    const formulaText = formulaOutput.data('text');
 
     const tempInput = $("<input>");
     $("body").append(tempInput);
