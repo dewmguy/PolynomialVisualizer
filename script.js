@@ -336,8 +336,7 @@ $(document).ready(function() {
     $(this).find('i').toggleClass('fa-arrow-left').toggleClass('fa-xmark');
   });
 
-  // Function to plot points from CSV input
-  $("#plot-points-button").on('click', () => {
+  $("#plot-points-button").on('click', function() {
     if($("#csv-input").val()) {
       csvPoints = $("#csv-input").val().trim().split('\n').map(line => {
         const [x, y] = line.trim().split(/[,\s\t]+/).map(Number);
@@ -355,11 +354,7 @@ $(document).ready(function() {
     $(window).scrollTop($(document).height());
   });
 
-  $("#plot-generate-button").on('click', () => {
-    $("#generate-form").toggle();
-  });
-
-  $("#generate-button").on('click', () => {
+  $("#generate-button").on('click', function() {
     const order = parseInt($("#poly-order").val());
     const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
     if (csvPoints.length > 0) {
