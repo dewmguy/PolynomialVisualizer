@@ -242,7 +242,10 @@ $(document).ready(function() {
 
   function loadParametersFromURL() {
     const params = new URLSearchParams(window.location.search);
-    if (params.has('order')) { $("#order").val(params.get('order')); }
+    if (params.has('order')) {
+      $("#order").val(params.get('order'));
+      $("#poly-order").val(params.get('order'));
+    }
     if (params.has('graph-title')) {
       $("#graph-title").val(params.get('graph-title'));
       $("#panel-toggle").toggleClass('open').toggleClass('close');
