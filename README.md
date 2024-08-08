@@ -1,4 +1,4 @@
-# [Polynomial Visualizer](https://dewmguy.github.io/PolynomialVisualizer/)
+# Polynomial Visualizer [🔗](https://dewmguy.github.io/PolynomialVisualizer/)
 
 This web application allows users to perform polynomial regression on a set of data points and visualize the resulting polynomial curve. The app provides an intuitive interface to input data points, configure polynomial order, and adjust coefficients interactively.
 
@@ -6,7 +6,7 @@ This web application allows users to perform polynomial regression on a set of d
 
 ### Features
 
-- **Data Input**: Enter data points manually or via CSV input.
+- **Data Input**: Enter data points.
 - **Polynomial Regression**: Fit polynomial curves to the data points with adjustable order from 1 to 6.
 - **Coefficient Adjustment**: Modify polynomial coefficients dynamically and see the effect on the curve in real-time.
 - **Visualization**: Interactive plotting using Plotly, displaying both the fitted polynomial and the original data points.
@@ -16,7 +16,7 @@ This web application allows users to perform polynomial regression on a set of d
 
 ### Usage
 
-1. **Input Data**: Enter data points in the provided input field or load from a CSV file.
+1. **Input Data**: Enter data points in the provided input field.
 2. **Set Polynomial Order**: Select the desired polynomial order (degree) for fitting.
 3. **Adjust Coefficients**: Use the sliders or input fields to adjust the polynomial coefficients manually.
 4. **Specify Intercept**: Optionally set a custom intercept value.
