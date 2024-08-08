@@ -7,8 +7,20 @@ $(document).ready(function() {
     return btoa(JSON.stringify(data));
   }
 
-  function decodeBase64(encodedData) {
-    return JSON.parse(atob(encodedData));
+  function decodeBase64(data) {
+    return JSON.parse(atob(data));
+  }
+  
+  function encodeLZ(data) {
+    const jsonString = JSON.stringify(data);
+    const compressedString = LZString.compressToBase64(jsonString);
+    return compressedString;
+  }
+
+  function decodeLZ(data) {
+    const decompressedString = LZString.decompressFromBase64(data);
+    const parsedData = JSON.parse(decompressedString);
+    return parsedData;
   }
 
   function PolynomialRegression(x, y, order) {
@@ -236,7 +248,9 @@ $(document).ready(function() {
     params.set('max-y', $("#max-y").val());
     params.set('order', order);
     params.set('graph-title', $("#graph-title").val());
-    if (csvPoints.length > 0) { params.set('csvPoints', encodeBase64(csvPoints)); }
+    if (csvPoints.length > 0) {
+      params.set('plot', encodeLZ(csvPoints));
+    }
     window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
   }
 
@@ -270,6 +284,11 @@ $(document).ready(function() {
 
     if (params.has('csvPoints')) {
       csvPoints = decodeBase64(params.get('csvPoints'));
+      const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
+      $("#csv-input").val(csvText);
+    }
+    else if (params.has('plot')) {
+      csvPoints = decodeLZ(params.get('plot'));
       const csvText = csvPoints.map(point => `${point.x},${point.y}`).join('\n');
       $("#csv-input").val(csvText);
     }
