@@ -122,6 +122,24 @@ $(document).ready(function() {
       saveParametersToURL();
     });
   }
+  
+  function calculatePlot(csvPoints) {
+    const order = parseInt($("#poly-order").val());
+    const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
+    if (csvPoints.length > 0) {
+      const x = csvPoints.map(point => point.x);
+      const y = csvPoints.map(point => point.y);
+      const polyfit = new Polyfit(x, y);
+      let coefficients = polyfit.computeCoefficients(order);
+      coefficients.forEach((c, i) => {
+        if (i <= MAX_ORDER) { $(`#${String.fromCharCode(97 + i)}`).val(c); }
+      });
+      initializeSliders();
+      updatePlot();
+      saveParametersToURL();
+      $("#order").val(order);
+    }
+  }
 
   function initializeSliders() {
     const order = parseInt($("#order").val());
@@ -331,14 +349,13 @@ $(document).ready(function() {
   });
 
   $("#order").on("change keyup", function() {
-    saveParametersToURL();
-    initializeParameters();
+    $("#poly-order").val($(this).val());
+    calculatePlot(csvPoints);
   });
 
   $("#poly-order").on("change keyup", function() {
     $("#order").val($(this).val());
-    saveParametersToURL();
-    initializeParameters();
+    calculatePlot(csvPoints);
   });
 
   $(window).on('resize', () => Plotly.Plots.resize(document.getElementById('plot')));
@@ -374,21 +391,7 @@ $(document).ready(function() {
   });
 
   $("#generate-button").on('click', function() {
-    const order = parseInt($("#poly-order").val());
-    const intercept = $("#intercept").val() ? parseFloat($("#intercept").val()) : null;
-    if (csvPoints.length > 0) {
-      const x = csvPoints.map(point => point.x);
-      const y = csvPoints.map(point => point.y);
-      const polyfit = new Polyfit(x, y);
-      let coefficients = polyfit.computeCoefficients(order);
-      coefficients.forEach((c, i) => {
-        if (i <= MAX_ORDER) { $(`#${String.fromCharCode(97 + i)}`).val(c); }
-      });
-      initializeSliders();
-      updatePlot();
-      saveParametersToURL();
-      $("#order").val(order);
-    }
+    calculatePlot(csvPoints);
   });
   
   initializeParameters();
