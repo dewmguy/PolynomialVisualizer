@@ -270,6 +270,19 @@ body.dark .sidebar div { background: #333 }
 }
 .sidebar button:hover { background-color: #0056b3 }
 
+.build-version {
+  display: block;
+  margin-top: -7px;
+  color: #666;
+  font-size: 0.6rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  user-select: text;
+}
+
+body.dark .build-version { color: #888 }
+
 .sidebar input[type="number"] {
   width: 100%;
   padding: 8px;
