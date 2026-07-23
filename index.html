@@ -6,6 +6,7 @@
     <title>Polynomial Visualizer</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" integrity="sha384-b+3kCkBF7JElwswpAsmVFMmrPhoYrpI5w68/JyidGsEYjaPuo0WDeg5Hx6YXxZqs" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/666b0b7246.js" crossorigin="anonymous"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.js" integrity="sha512-7eihdxAa03T9/2H9gNqqE0CO1STcxdrYbMAv/JfoBAe3NM89Gg3oiGuDP/tvKieQRFVEn0UOolvNj4AVwIPISQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
     <script defer src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha384-8EM386r8XMMzwGPUxfGNr6c1wIOYnPQBJ6VFxzKCZeklpQarHoZGB40kdNDA3gYr" crossorigin="anonymous"></script>
@@ -14,63 +15,89 @@
     <script defer src="script.js"></script>
 </head>
 <body class="dark">
-    <button type="button" id="panel-toggle" class="close icon-button" aria-controls="panel" aria-expanded="true" aria-label="Hide controls">×</button>
-    <button type="button" id="sidebar-toggle" class="open icon-button" aria-controls="sidebar" aria-expanded="false" aria-label="Open data sidebar">←</button>
-    <div id="panel" class="controls float">
-        <div class="group">
-            <div class="input-group">
-                <button type="button" id="theme-toggle">Light Mode</button>
+    <button type="button" id="panel-toggle" class="close icon-button" aria-controls="panel" aria-expanded="true" aria-label="Hide controls" title="Hide controls"><i class="fa-solid fa-chevron-up" aria-hidden="true"></i></button>
+    <button type="button" id="sidebar-toggle" class="open icon-button" aria-controls="sidebar" aria-expanded="false" aria-label="Open data sidebar" title="Plot data"><i class="fa-solid fa-table-list" aria-hidden="true"></i></button>
+    <main id="panel" class="controls float" aria-label="Polynomial controls">
+        <section class="group action-group">
+            <div class="group-heading">
+                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                <span>Workspace</span>
             </div>
-            <div class="input-group">
-                <button type="button" id="float-button">Dock Panel</button>
+            <div class="quick-actions">
+                <button type="button" id="theme-toggle" class="secondary-button"><i class="fa-solid fa-sun" aria-hidden="true"></i><span>Light mode</span></button>
+                <button type="button" id="float-button" class="secondary-button"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i><span>Dock panel</span></button>
+                <button type="button" id="reset-button" class="danger-button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i><span>Reset</span></button>
             </div>
-            <div class="input-group">
-                <button type="button" id="reset-button">Reset</button>
+        </section>
+        <section class="group settings-group">
+            <div class="group-heading">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                <span>Graph</span>
             </div>
-        </div>
-        <div class="group">
-            <div class="input-group">
+            <div class="input-group title-field">
                 <label class="visually-hidden" for="graph-title">Graph title</label>
+                <i class="fa-solid fa-pen" aria-hidden="true"></i>
                 <input type="text" id="graph-title" name="graph-title" value="Polynomial Plot" maxlength="200" />
             </div>
-            <div class="input-group">
+            <div class="input-group compact-field">
                 <label for="order">Order:</label>
                 <input type="number" id="order" value="1" min="1" max="8" step="1">
             </div>
-            <div class="input-group">
-                <label for="min-x">X min</label>
-                <input type="number" id="min-x" value="0">
-                <label for="max-x">X max</label>
-                <input type="number" id="max-x" value="100">
+            <div class="axis-grid">
+                <div class="axis-field">
+                    <span class="axis-label">X range</span>
+                    <label class="visually-hidden" for="min-x">X minimum</label>
+                    <input type="number" id="min-x" value="0" aria-label="X minimum">
+                    <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                    <label class="visually-hidden" for="max-x">X maximum</label>
+                    <input type="number" id="max-x" value="100" aria-label="X maximum">
+                </div>
+                <div class="axis-field">
+                    <span class="axis-label">Y range</span>
+                    <label class="visually-hidden" for="min-y">Y minimum</label>
+                    <input type="number" id="min-y" value="0" aria-label="Y minimum">
+                    <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                    <label class="visually-hidden" for="max-y">Y maximum</label>
+                    <input type="number" id="max-y" value="100" aria-label="Y maximum">
+                </div>
             </div>
-            <div class="input-group">
-                <label for="min-y">Y min</label>
-                <input type="number" id="min-y" value="0">
-                <label for="max-y">Y max</label>
-                <input type="number" id="max-y" value="100">
+        </section>
+        <section class="group coefficient-group">
+            <div class="group-heading">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                <span>Coefficients</span>
             </div>
-        </div>
-        <div class="group coefficient-group">
-            <p class="slider-instructions">Fine adjustment is strongest near center. Use Center to restore the slider's anchor value.</p>
+            <p class="slider-instructions">Drag near center for precision. Center restores the anchor value.</p>
             <div id="parameter-group"></div>
-        </div>
-    </div>
+        </section>
+    </main>
     <div id="formula-output" data-text=""></div>
     <div id="status-output" role="status" aria-live="polite" hidden></div>
     <div id="plot"></div>
 
-    <div id="sidebar" class="sidebar">
+    <aside id="sidebar" class="sidebar" aria-label="Plot data">
         <form>
-            <h3>Plot Data</h3>
-            <textarea id="csv-input" placeholder="Enter points as X Y&#10;Separate with space or comma&#10;One plot point per line"></textarea>
-                <button type="button" id="plot-points-button">Plot Points</button>
-            <div>
-                <label for="poly-order">Order:</label>
-                <input type="number" id="poly-order" min="1" max="8" value="1">
+            <header class="sidebar-header">
+                <span class="sidebar-icon"><i class="fa-solid fa-table-list" aria-hidden="true"></i></span>
+                <div>
+                    <h2>Plot data</h2>
+                    <p>Paste coordinate pairs to visualize or fit.</p>
                 </div>
-                <button type="button" id="generate-button">Generate</button>
-                <small class="build-version" title="Polynomial Visualizer deployment identifier">Build 2026.07.22.1</small>
-            </form>
-    </div>
+            </header>
+            <label class="visually-hidden" for="csv-input">Coordinate pairs</label>
+            <textarea id="csv-input" spellcheck="false" placeholder="0, 12&#10;10, 18.4&#10;20, 27.1"></textarea>
+            <button type="button" id="plot-points-button" class="secondary-button"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Plot points</span></button>
+            <div class="fit-card">
+                <div class="fit-card-copy">
+                    <span class="fit-card-title"><i class="fa-solid fa-bezier-curve" aria-hidden="true"></i> Polynomial fit</span>
+                    <span class="fit-card-detail">Choose a degree from 1–8</span>
+                </div>
+                <label for="poly-order">Order</label>
+                <input type="number" id="poly-order" min="1" max="8" value="1">
+            </div>
+            <button type="button" id="generate-button" class="primary-button"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><span>Generate curve</span></button>
+            <small class="build-version" title="Polynomial Visualizer deployment identifier"><i class="fa-solid fa-code-branch" aria-hidden="true"></i> Build 2026.07.22.2</small>
+        </form>
+    </aside>
 </body>
 </html>

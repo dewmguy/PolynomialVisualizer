@@ -155,6 +155,17 @@ $(document).ready(function() {
     $('#order, #poly-order').val(order);
     const parameters = getParameters(order);
     const graphTitle = String($('#graph-title').val()).slice(0, 200);
+    const themeStyles = window.getComputedStyle(document.body);
+    const themeColor = name => themeStyles.getPropertyValue(name).trim();
+    const colors = {
+      background: themeColor('--app-bg'),
+      text: themeColor('--text'),
+      textSoft: themeColor('--text-soft'),
+      grid: themeColor('--plot-grid'),
+      line: themeColor('--plot-line'),
+      point: themeColor('--plot-point'),
+      surface: themeColor('--surface-solid')
+    };
     const x = [];
     const y = [];
     let overflowed = false;
@@ -172,7 +183,8 @@ $(document).ready(function() {
       y,
       type: 'scatter',
       mode: 'lines',
-      name: 'Polynomial'
+      name: 'Polynomial',
+      line: { color: colors.line, width: 3 }
     }];
 
     if (csvPoints.length > 0) {
@@ -181,7 +193,12 @@ $(document).ready(function() {
         y: csvPoints.map(point => point.y),
         mode: 'markers',
         type: 'scatter',
-        name: 'Data'
+        name: 'Data',
+        marker: {
+          color: colors.point,
+          size: 8,
+          line: { color: colors.background, width: 1.5 }
+        }
       });
     }
 
@@ -192,11 +209,33 @@ $(document).ready(function() {
 
     Plotly.react('plot', traces, {
       title: { text: escapeHtml(graphTitle) },
-      xaxis: { range: [axes.minX, axes.maxX] },
-      yaxis: { range: [axes.minY, axes.maxY] },
-      paper_bgcolor: isDarkMode ? '#121212' : '#fff',
-      plot_bgcolor: isDarkMode ? '#121212' : '#fff',
-      font: { color: isDarkMode ? '#e0e0e0' : '#000' },
+      xaxis: {
+        range: [axes.minX, axes.maxX],
+        gridcolor: colors.grid,
+        zerolinecolor: colors.grid,
+        linecolor: colors.grid,
+        tickfont: { color: colors.textSoft }
+      },
+      yaxis: {
+        range: [axes.minY, axes.maxY],
+        gridcolor: colors.grid,
+        zerolinecolor: colors.grid,
+        linecolor: colors.grid,
+        tickfont: { color: colors.textSoft }
+      },
+      paper_bgcolor: colors.background,
+      plot_bgcolor: colors.background,
+      font: {
+        color: colors.text,
+        family: 'Inter, Segoe UI, sans-serif'
+      },
+      hoverlabel: {
+        bgcolor: colors.surface,
+        bordercolor: colors.grid,
+        font: { color: colors.text }
+      },
+      margin: { t: 76, r: 42, b: 58, l: 66 },
+      hovermode: 'closest',
       uirevision: 'polynomial-visualizer'
     }, {
       responsive: true,
@@ -336,7 +375,7 @@ $(document).ready(function() {
           <label for="${letter}">${upperLetter}:</label>
           <input type="number" id="${letter}" value="0" step="any" inputmode="decimal">
           <div id="slider-${letter}" class="slider"></div>
-          <button type="button" class="slider-center-button" data-index="${index}" aria-label="Restore ${upperLetter} to its slider anchor">Center</button>
+          <button type="button" class="slider-center-button" data-index="${index}" aria-label="Restore ${upperLetter} to its slider anchor" title="Restore anchor"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i><span class="visually-hidden">Center</span></button>
         </div>
       `);
     }
@@ -413,7 +452,7 @@ $(document).ready(function() {
     }
 
     $('#formula-output')
-      .html(`<div class="formula"><span tabindex="0" role="button" aria-label="Copy formula">${htmlFormula}</span></div>`)
+      .html(`<div class="formula"><span tabindex="0" role="button" aria-label="Copy formula"><i class="fa-regular fa-copy" aria-hidden="true"></i>${htmlFormula}</span></div>`)
       .data('text', textFormula);
   }
 
@@ -430,7 +469,7 @@ $(document).ready(function() {
         document.execCommand('copy');
         tempInput.remove();
       }
-      formulaOutput.html("<div class='formula'>Formula copied to clipboard!</div>");
+      formulaOutput.html("<div class='formula'><span><i class='fa-solid fa-check' aria-hidden='true'></i>Formula copied</span></div>");
       window.setTimeout(() => formulaOutput.html(originalHtml), 2000);
     }
     catch (error) {
@@ -536,9 +575,10 @@ $(document).ready(function() {
     $('#panel-toggle')
       .toggleClass('open', !visible)
       .toggleClass('close', visible)
-      .text(visible ? '×' : '↓')
+      .html(`<i class="fa-solid ${visible ? 'fa-chevron-up' : 'fa-sliders'}" aria-hidden="true"></i>`)
       .attr('aria-expanded', visible)
-      .attr('aria-label', visible ? 'Hide controls' : 'Show controls');
+      .attr('aria-label', visible ? 'Hide controls' : 'Show controls')
+      .attr('title', visible ? 'Hide controls' : 'Show controls');
   }
 
   function setSidebarVisible(visible) {
@@ -547,9 +587,10 @@ $(document).ready(function() {
     $('#sidebar-toggle')
       .toggleClass('open', !visible)
       .toggleClass('close', visible)
-      .text(visible ? '×' : '←')
+      .html(`<i class="fa-solid ${visible ? 'fa-xmark' : 'fa-table-list'}" aria-hidden="true"></i>`)
       .attr('aria-expanded', visible)
-      .attr('aria-label', visible ? 'Close data sidebar' : 'Open data sidebar');
+      .attr('aria-label', visible ? 'Close data sidebar' : 'Open data sidebar')
+      .attr('title', visible ? 'Close data sidebar' : 'Plot data');
   }
 
   $('#formula-output').on('click', '.formula span', copyFormulaToClipboard);
@@ -565,7 +606,7 @@ $(document).ready(function() {
   $('#theme-toggle').on('click', function() {
     isDarkMode = !isDarkMode;
     $('body').toggleClass('dark', isDarkMode);
-    $(this).text(isDarkMode ? 'Light Mode' : 'Dark Mode');
+    $(this).html(`<i class="fa-solid ${isDarkMode ? 'fa-sun' : 'fa-moon'}" aria-hidden="true"></i><span>${isDarkMode ? 'Light mode' : 'Dark mode'}</span>`);
     schedulePlotUpdate(false);
   });
 
@@ -626,7 +667,7 @@ $(document).ready(function() {
   $('#float-button').on('click', function() {
     $('#panel').toggleClass('float');
     const isFloating = $('#panel').hasClass('float');
-    $(this).text(isFloating ? 'Dock Panel' : 'Float Panel');
+    $(this).html(`<i class="fa-solid ${isFloating ? 'fa-thumbtack' : 'fa-window-maximize'}" aria-hidden="true"></i><span>${isFloating ? 'Dock panel' : 'Float panel'}</span>`);
     $(window).scrollTop($(document).height());
   });
 
