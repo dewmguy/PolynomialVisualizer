@@ -2,8 +2,12 @@
   margin: 0;
   border: 0;
   padding: 0;
-  outline: 0;
   box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
 }
 
 body {
@@ -39,6 +43,8 @@ body.dark textarea {
   border: 1px solid #ddd;
   border-radius: 3px;
   width: 25px;
+  height: 25px;
+  padding: 0;
   font-size: 14px;
   line-height: 25px;
   text-align: center;
@@ -57,7 +63,7 @@ body.dark #panel-toggle.open, body.dark #sidebar-toggle.open { background: #666 
 #panel-toggle.open:hover, #sidebar-toggle.open:hover { background: #B7B7B7 }
 
 #panel-toggle.close, #sidebar-toggle.close { background: #D0D0D7 }
-body.dark #panel-toggle.close, #sidebar-toggle.close { background: #666 }
+body.dark #panel-toggle.close, body.dark #sidebar-toggle.close { background: #666 }
 #panel-toggle.close:hover, #sidebar-toggle.close:hover {
   background: #A33;
   color: #FFF;
@@ -88,6 +94,47 @@ body.dark #formula-output {
 #plot {
   width: 100%;
   height: calc(100vh - 60px);
+}
+
+#status-output {
+  position: fixed;
+  top: 65px;
+  left: 50%;
+  max-width: min(90vw, 760px);
+  padding: 10px 14px;
+  border: 1px solid #9a6700;
+  border-radius: 5px;
+  background: #fff8c5;
+  color: #3b2f00;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+#status-output.success {
+  border-color: #1a7f37;
+  background: #dafbe1;
+  color: #0f5323;
+}
+
+#status-output.error {
+  border-color: #cf222e;
+  background: #ffebe9;
+  color: #82071e;
+}
+
+body.dark #status-output {
+  background: #3d3200;
+  color: #fff1a8;
+}
+
+body.dark #status-output.success {
+  background: #123820;
+  color: #aff5b4;
+}
+
+body.dark #status-output.error {
+  background: #4c161b;
+  color: #ffb3ba;
 }
 
 #panel.float {
@@ -123,6 +170,25 @@ body.dark .controls {
   justify-content: center;
 }
 
+#parameter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.coefficient-group {
+  min-width: 360px;
+}
+
+.slider-instructions {
+  max-width: 390px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: #555;
+}
+
+body.dark .slider-instructions { color: #bbb }
+
 .input-group label {
   margin-bottom: 0;
 }
@@ -135,6 +201,14 @@ body.dark label, body.dark label {
     width: 200px;
 }
 
+.slider-center-button {
+  width: auto;
+  min-width: 58px;
+  height: 28px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+}
+
 .group {
     display: flex;
     flex-wrap: wrap;
@@ -145,6 +219,18 @@ body.dark label, body.dark label {
 .ui-slider .ui-slider-handle {
     background-color: #007bff;
     border: none;
+}
+
+.ui-slider::after {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 1px;
+  height: 14px;
+  background: currentColor;
+  content: "";
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .ui-slider .ui-slider-range { background-color: #007bff }
@@ -232,4 +318,40 @@ body.dark button {
 body.dark .input-group button {
   background: #444;
   border: 1px solid #333;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 700px) {
+  .controls {
+    gap: 24px;
+    padding: 16px 40px;
+  }
+
+  .coefficient-group {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #parameter-group .input-group {
+    flex-wrap: wrap;
+  }
+
+  .slider {
+    width: min(200px, 52vw);
+  }
+
+  #graph-title {
+    width: min(42ch, 75vw);
+  }
 }

@@ -4,70 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polynomial Visualizer</title>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" integrity="sha384-b+3kCkBF7JElwswpAsmVFMmrPhoYrpI5w68/JyidGsEYjaPuo0WDeg5Hx6YXxZqs" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
-    <script src="https://kit.fontawesome.com/666b0b7246.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.js" integrity="sha512-7eihdxAa03T9/2H9gNqqE0CO1STcxdrYbMAv/JfoBAe3NM89Gg3oiGuDP/tvKieQRFVEn0UOolvNj4AVwIPISQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="polyfit.js"></script>
-    <script src="script.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.js" integrity="sha512-7eihdxAa03T9/2H9gNqqE0CO1STcxdrYbMAv/JfoBAe3NM89Gg3oiGuDP/tvKieQRFVEn0UOolvNj4AVwIPISQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
+    <script defer src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha384-8EM386r8XMMzwGPUxfGNr6c1wIOYnPQBJ6VFxzKCZeklpQarHoZGB40kdNDA3gYr" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.plot.ly/plotly-3.5.1.min.js" integrity="sha384-q9yr94Q0VOrvy+0bhh8Kb8lLAxXKqgGEpKaD0oYOJddM6ZiWNI4kqBeTjlrK/a3T" crossorigin="anonymous"></script>
+    <script defer src="polyfit.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body class="dark">
-    <div id="panel-toggle" class="close"><i class="fa-solid fa-xmark"></i></div>
-    <div id="sidebar-toggle" class="open"><i class="fa-solid fa-arrow-left"></i></div>
+    <button type="button" id="panel-toggle" class="close icon-button" aria-controls="panel" aria-expanded="true" aria-label="Hide controls">×</button>
+    <button type="button" id="sidebar-toggle" class="open icon-button" aria-controls="sidebar" aria-expanded="false" aria-label="Open data sidebar">←</button>
     <div id="panel" class="controls float">
         <div class="group">
             <div class="input-group">
-                <button id="theme-toggle">Light Mode</button>
+                <button type="button" id="theme-toggle">Light Mode</button>
             </div>
             <div class="input-group">
-                <button id="float-button">Dock Panel</button>
+                <button type="button" id="float-button">Dock Panel</button>
             </div>
             <div class="input-group">
-                <button id="reset-button">Reset</button>
+                <button type="button" id="reset-button">Reset</button>
             </div>
         </div>
         <div class="group">
             <div class="input-group">
-                <input type="text" id="graph-title" name="graph-title" value="Polynomial Plot" />
+                <label class="visually-hidden" for="graph-title">Graph title</label>
+                <input type="text" id="graph-title" name="graph-title" value="Polynomial Plot" maxlength="200" />
             </div>
             <div class="input-group">
                 <label for="order">Order:</label>
                 <input type="number" id="order" value="1" min="1" max="8" step="1">
             </div>
             <div class="input-group">
-                <label for="min-x">-</label>
+                <label for="min-x">X min</label>
                 <input type="number" id="min-x" value="0">
-                <label>X</label>
+                <label for="max-x">X max</label>
                 <input type="number" id="max-x" value="100">
-                <label for="max-x">+</label>
             </div>
             <div class="input-group">
-                <label for="min-y">-</label>
+                <label for="min-y">Y min</label>
                 <input type="number" id="min-y" value="0">
-                <label>Y</label>
+                <label for="max-y">Y max</label>
                 <input type="number" id="max-y" value="100">
-                <label for="max-y">+</label>
             </div>
         </div>
-        <div class="group" id="parameter-group">
+        <div class="group coefficient-group">
+            <p class="slider-instructions">Fine adjustment is strongest near center. Use Center to restore the slider's anchor value.</p>
+            <div id="parameter-group"></div>
         </div>
     </div>
     <div id="formula-output" data-text=""></div>
+    <div id="status-output" role="status" aria-live="polite" hidden></div>
     <div id="plot"></div>
 
     <div id="sidebar" class="sidebar">
         <form>
             <h3>Plot Data</h3>
             <textarea id="csv-input" placeholder="Enter points as X Y&#10;Separate with space or comma&#10;One plot point per line"></textarea>
-            <button id="plot-points-button">Plot Points</button>
+                <button type="button" id="plot-points-button">Plot Points</button>
             <div>
                 <label for="poly-order">Order:</label>
                 <input type="number" id="poly-order" min="1" max="8" value="1">
             </div>
-            <button id="generate-button">Generate</button>
+                <button type="button" id="generate-button">Generate</button>
         </form>
     </div>
 </body>
