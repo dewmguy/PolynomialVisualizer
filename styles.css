@@ -97,25 +97,27 @@ button {
   width: 40px;
   height: 40px;
   place-items: center;
-  border: 1px solid var(--border-strong);
+  border: 1px solid color-mix(in srgb, var(--primary) 72%, white);
   border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  color: var(--text-soft);
+  background: var(--primary);
+  box-shadow:
+    0 0 0 2px var(--app-bg),
+    0 8px 24px color-mix(in srgb, var(--primary) 42%, transparent);
+  color: #fff;
   cursor: pointer;
   backdrop-filter: blur(18px);
   transition: transform 150ms ease, color 150ms ease, background 150ms ease, border-color 150ms ease;
 }
 
 .icon-button:hover {
-  border-color: var(--primary);
-  background: var(--surface-hover);
-  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 62%, white);
+  background: color-mix(in srgb, var(--primary) 82%, black);
+  color: #fff;
   transform: translateY(-1px);
 }
 
 .icon-button.close {
-  color: var(--primary);
+  color: #fff;
 }
 
 #panel-toggle { left: 16px; }
@@ -131,6 +133,13 @@ button {
   background: color-mix(in srgb, var(--app-bg) 76%, transparent);
   z-index: 30;
   backdrop-filter: blur(24px) saturate(140%);
+}
+
+#panel:not(.float) {
+  width: calc(100% - 136px);
+  margin: 12px auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
 }
 
 #panel.float {
@@ -669,6 +678,11 @@ textarea::placeholder { color: var(--text-faint); }
   #panel.float {
     grid-template-columns: 1fr;
     width: calc(100vw - 24px);
+  }
+
+  #panel:not(.float) {
+    width: calc(100% - 24px);
+    margin: 62px auto 12px;
   }
 
   #panel.float {
